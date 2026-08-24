@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>A Little Surprise 🎁</title>
+  <title>A Little Surprise 🎁 · Photos</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,6 +23,7 @@
       --pink-soft: #ffdcec;
       --dark: #100711;
       --dark2: #270d25;
+      --photo-size: clamp(80px, 18vw, 180px); /* responsive random photos */
     }
 
     body {
@@ -36,6 +37,7 @@
         radial-gradient(circle at 85% 20%, rgba(255, 170, 215, .10), transparent 28%),
         linear-gradient(145deg, var(--dark), var(--dark2), #0c0710);
       position: relative;
+      pointer-events: none; /* base layer no click */
     }
 
     body::before {
@@ -50,14 +52,13 @@
       pointer-events: none;
     }
 
-    /* ---------- STARS ---------- */
-
+    /* ---------- STARS (existing) ---------- */
     .stars {
       position: fixed;
       inset: 0;
       pointer-events: none;
+      z-index: 1;
     }
-
     .star {
       position: absolute;
       width: 3px;
@@ -67,20 +68,12 @@
       opacity: .4;
       animation: twinkle 2.5s ease-in-out infinite;
     }
-
     @keyframes twinkle {
-      0%,100% {
-        opacity: .15;
-        transform: scale(.7);
-      }
-      50% {
-        opacity: .9;
-        transform: scale(1.5);
-      }
+      0%,100% { opacity: .15; transform: scale(.7); }
+      50% { opacity: .9; transform: scale(1.5); }
     }
 
-    /* ---------- PAGE ---------- */
-
+    /* ---------- PAGE CONTENT (existing layout) ---------- */
     .page {
       min-height: 100vh;
       display: flex;
@@ -89,15 +82,13 @@
       position: relative;
       z-index: 2;
       text-align: center;
+      pointer-events: auto; /* re-enable clicks for interactive parts */
     }
 
     .landing {
       width: min(92vw, 900px);
-      transition:
-        opacity .8s ease,
-        transform .8s cubic-bezier(.2,.8,.2,1);
+      transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1);
     }
-
     .landing.hide {
       opacity: 0;
       transform: scale(.85) translateY(-35px);
@@ -111,7 +102,6 @@
       color: var(--pink-light);
       margin-bottom: 20px;
     }
-
     h1 {
       font-family: "Playfair Display", serif;
       font-weight: 600;
@@ -119,7 +109,6 @@
       line-height: .98;
       text-shadow: 0 0 40px rgba(255,110,173,.18);
     }
-
     .intro {
       max-width: 560px;
       margin: 22px auto 38px;
@@ -128,8 +117,7 @@
       line-height: 1.7;
     }
 
-    /* ---------- GIFT ---------- */
-
+    /* ---------- GIFT (unchanged) ---------- */
     .gift-area {
       width: 280px;
       height: 300px;
@@ -137,306 +125,64 @@
       position: relative;
       cursor: pointer;
       perspective: 900px;
-    }
-
-    .gift-shadow {
-      position: absolute;
-      left: 50%;
-      bottom: 30px;
-      width: 190px;
-      height: 30px;
-      transform: translateX(-50%);
-      border-radius: 50%;
-      background: rgba(0,0,0,.35);
-      filter: blur(14px);
-      transition: .7s ease;
-    }
-
-    .gift-box {
-      position: absolute;
-      left: 50%;
-      bottom: 55px;
-      width: 175px;
-      height: 140px;
-      transform: translateX(-50%);
-      border-radius: 14px;
-      background:
-        linear-gradient(
-          90deg,
-          transparent 42%,
-          rgba(255,255,255,.18) 42%,
-          rgba(255,255,255,.18) 58%,
-          transparent 58%
-        ),
-        linear-gradient(145deg, #ef4b98, #ff76b5);
-      box-shadow:
-        inset 0 1px rgba(255,255,255,.35),
-        0 25px 60px rgba(255,70,150,.22);
-      transition:
-        transform .9s cubic-bezier(.2,.85,.25,1),
-        opacity .6s ease;
-    }
-
-    .gift-front {
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background:
-        linear-gradient(
-          90deg,
-          transparent 43%,
-          rgba(255,255,255,.17) 43%,
-          rgba(255,255,255,.17) 57%,
-          transparent 57%
-        );
-    }
-
-    .gift-ribbon-horizontal {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 42%;
-      height: 18%;
-      background: rgba(255,255,255,.12);
-    }
-
-    .gift-lid {
-      position: absolute;
-      left: 50%;
-      bottom: 185px;
-      width: 195px;
-      height: 42px;
-      transform: translateX(-50%);
-      border-radius: 11px;
-      background: linear-gradient(145deg, #ff98c7, #f4519d);
-      box-shadow:
-        0 10px 25px rgba(0,0,0,.25),
-        inset 0 1px rgba(255,255,255,.3);
-      transform-origin: 85% 100%;
-      transition:
-        transform 1.15s cubic-bezier(.12,.75,.2,1),
-        bottom 1.15s cubic-bezier(.12,.75,.2,1);
-      z-index: 4;
-    }
-
-    .lid-ribbon {
-      position: absolute;
-      left: 42%;
-      top: 0;
-      width: 16%;
-      height: 100%;
-      background: rgba(255,255,255,.16);
-    }
-
-    .bow {
-      position: absolute;
-      width: 100px;
-      height: 65px;
-      left: 50%;
-      bottom: 215px;
-      transform: translateX(-50%);
       z-index: 5;
-      transition:
-        transform 1.15s cubic-bezier(.12,.75,.2,1),
-        bottom 1.15s cubic-bezier(.12,.75,.2,1);
     }
-
-    .bow-left,
-    .bow-right {
-      position: absolute;
-      top: 18px;
-      width: 58px;
-      height: 38px;
-      border: 12px solid #ffb4d5;
-      border-radius: 55% 45% 55% 45%;
-    }
-
-    .bow-left {
-      left: 0;
-      transform: rotate(22deg);
-    }
-
-    .bow-right {
-      right: 0;
-      transform: rotate(-22deg);
-    }
-
-    .bow-center {
-      position: absolute;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: #ffe0ed;
-      top: 25px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 3;
-      box-shadow: 0 0 15px rgba(255,255,255,.25);
-    }
-
-    /* ---------- SPARKLE FROM GIFT ---------- */
-
-    .gift-particles {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    .particle {
-      position: absolute;
-      left: 50%;
-      top: 48%;
-      opacity: 0;
-      font-size: 20px;
-    }
-
-    /* ---------- OPEN STATE ---------- */
-
-    .gift-area.open .gift-lid {
-      bottom: 220px;
-      transform:
-        translateX(-50%)
-        translateY(-55px)
-        rotate(-12deg);
-    }
-
-    .gift-area.open .bow {
-      bottom: 250px;
-      transform:
-        translateX(-50%)
-        translateY(-55px)
-        rotate(-12deg);
-    }
-
-    .gift-area.open .gift-box {
-      transform: translateX(-50%) translateY(12px) scale(.95);
-    }
-
-    .gift-area.open .gift-shadow {
-      transform: translateX(-50%) scale(1.15);
-      opacity: .5;
-    }
-
-    .gift-area.open .particle {
-      animation: burst 1.3s cubic-bezier(.2,.8,.2,1) forwards;
-    }
-
+    .gift-shadow { position: absolute; left: 50%; bottom: 30px; width: 190px; height: 30px; transform: translateX(-50%); border-radius: 50%; background: rgba(0,0,0,.35); filter: blur(14px); transition: .7s ease; }
+    .gift-box { position: absolute; left: 50%; bottom: 55px; width: 175px; height: 140px; transform: translateX(-50%); border-radius: 14px; background: linear-gradient(90deg, transparent 42%, rgba(255,255,255,.18) 42%, rgba(255,255,255,.18) 58%, transparent 58%), linear-gradient(145deg, #ef4b98, #ff76b5); box-shadow: inset 0 1px rgba(255,255,255,.35), 0 25px 60px rgba(255,70,150,.22); transition: transform .9s cubic-bezier(.2,.85,.25,1), opacity .6s ease; }
+    .gift-front { position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, transparent 43%, rgba(255,255,255,.17) 43%, rgba(255,255,255,.17) 57%, transparent 57%); }
+    .gift-ribbon-horizontal { position: absolute; left: 0; right: 0; top: 42%; height: 18%; background: rgba(255,255,255,.12); }
+    .gift-lid { position: absolute; left: 50%; bottom: 185px; width: 195px; height: 42px; transform: translateX(-50%); border-radius: 11px; background: linear-gradient(145deg, #ff98c7, #f4519d); box-shadow: 0 10px 25px rgba(0,0,0,.25), inset 0 1px rgba(255,255,255,.3); transform-origin: 85% 100%; transition: transform 1.15s cubic-bezier(.12,.75,.2,1), bottom 1.15s cubic-bezier(.12,.75,.2,1); z-index: 4; }
+    .lid-ribbon { position: absolute; left: 42%; top: 0; width: 16%; height: 100%; background: rgba(255,255,255,.16); }
+    .bow { position: absolute; width: 100px; height: 65px; left: 50%; bottom: 215px; transform: translateX(-50%); z-index: 5; transition: transform 1.15s cubic-bezier(.12,.75,.2,1), bottom 1.15s cubic-bezier(.12,.75,.2,1); }
+    .bow-left, .bow-right { position: absolute; top: 18px; width: 58px; height: 38px; border: 12px solid #ffb4d5; border-radius: 55% 45% 55% 45%; }
+    .bow-left { left: 0; transform: rotate(22deg); }
+    .bow-right { right: 0; transform: rotate(-22deg); }
+    .bow-center { position: absolute; width: 26px; height: 26px; border-radius: 50%; background: #ffe0ed; top: 25px; left: 50%; transform: translateX(-50%); z-index: 3; box-shadow: 0 0 15px rgba(255,255,255,.25); }
+    .gift-particles { position: absolute; inset: 0; pointer-events: none; }
+    .particle { position: absolute; left: 50%; top: 48%; opacity: 0; font-size: 20px; }
+    .gift-area.open .gift-lid { bottom: 220px; transform: translateX(-50%) translateY(-55px) rotate(-12deg); }
+    .gift-area.open .bow { bottom: 250px; transform: translateX(-50%) translateY(-55px) rotate(-12deg); }
+    .gift-area.open .gift-box { transform: translateX(-50%) translateY(12px) scale(.95); }
+    .gift-area.open .gift-shadow { transform: translateX(-50%) scale(1.15); opacity: .5; }
+    .gift-area.open .particle { animation: burst 1.3s cubic-bezier(.2,.8,.2,1) forwards; }
     @keyframes burst {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(.4);
-      }
-
-      15% {
-        opacity: 1;
-      }
-
-      100% {
-        opacity: 0;
-        transform:
-          translate(
-            calc(-50% + var(--x)),
-            calc(-50% + var(--y))
-          )
-          scale(1.2)
-          rotate(25deg);
-      }
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(.4); }
+      15% { opacity: 1; }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1.2) rotate(25deg); }
     }
-
     .particle:nth-child(1) { --x: -90px; --y: -100px; animation-delay: .05s; }
     .particle:nth-child(2) { --x: -35px; --y: -150px; animation-delay: .12s; }
     .particle:nth-child(3) { --x: 65px; --y: -135px; animation-delay: .18s; }
     .particle:nth-child(4) { --x: 110px; --y: -80px; animation-delay: .24s; }
     .particle:nth-child(5) { --x: -125px; --y: -30px; animation-delay: .30s; }
     .particle:nth-child(6) { --x: 125px; --y: -20px; animation-delay: .36s; }
+    .click-text { margin-top: 8px; color: #ffd3e6; font-size: 14px; letter-spacing: 1px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
 
-    .click-text {
-      margin-top: 8px;
-      color: #ffd3e6;
-      font-size: 14px;
-      letter-spacing: 1px;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%,100% { opacity: .55; }
-      50% { opacity: 1; }
-    }
-
-    /* ---------- COUNTDOWN ---------- */
-
+    /* ---------- COUNTDOWN (existing) ---------- */
     .countdown-page {
       position: absolute;
       width: min(92vw, 900px);
       opacity: 0;
       transform: scale(1.08) translateY(40px);
       pointer-events: none;
-      transition:
-        opacity 1s ease,
-        transform 1s cubic-bezier(.2,.8,.2,1);
+      transition: opacity 1s ease, transform 1s cubic-bezier(.2,.8,.2,1);
       z-index: 3;
       text-align: center;
     }
-
     .countdown-page.show {
       opacity: 1;
       transform: scale(1) translateY(0);
       pointer-events: auto;
     }
+    .subtitle { margin: 20px auto 35px; color: #f2d7e5; line-height: 1.7; }
+    .countdown { display: grid; grid-template-columns: repeat(4,1fr); gap: 15px; max-width: 720px; margin: auto; }
+    .box { padding: 25px 10px; border-radius: 22px; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(18px); box-shadow: inset 0 1px rgba(255,255,255,.07); }
+    .num { display: block; font-size: clamp(34px,6vw,58px); font-weight: 600; letter-spacing: -2px; font-variant-numeric: tabular-nums; }
+    .label { display: block; margin-top: 7px; color: #eabed3; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; }
+    .date { display: inline-block; margin-top: 30px; padding: 11px 18px; border-radius: 999px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05); color: #ffd8e8; font-size: 13px; }
 
-    .subtitle {
-      margin: 20px auto 35px;
-      color: #f2d7e5;
-      line-height: 1.7;
-    }
-
-    .countdown {
-      display: grid;
-      grid-template-columns: repeat(4,1fr);
-      gap: 15px;
-      max-width: 720px;
-      margin: auto;
-    }
-
-    .box {
-      padding: 25px 10px;
-      border-radius: 22px;
-      background: rgba(255,255,255,.055);
-      border: 1px solid rgba(255,255,255,.12);
-      backdrop-filter: blur(18px);
-      box-shadow: inset 0 1px rgba(255,255,255,.07);
-    }
-
-    .num {
-      display: block;
-      font-size: clamp(34px,6vw,58px);
-      font-weight: 600;
-      letter-spacing: -2px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .label {
-      display: block;
-      margin-top: 7px;
-      color: #eabed3;
-      font-size: 10px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
-
-    .date {
-      display: inline-block;
-      margin-top: 30px;
-      padding: 11px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      color: #ffd8e8;
-      font-size: 13px;
-    }
-
-    /* ---------- FLOATING BUTTONS ---------- */
-
+    /* ---------- FLOATING BUTTONS (unchanged) ---------- */
     .float {
       position: fixed;
       border: 0;
@@ -448,58 +194,94 @@
       backdrop-filter: blur(10px);
       cursor: pointer;
       font-size: 22px;
-      z-index: 8;
+      z-index: 15;
       animation: floating 5s ease-in-out infinite;
       box-shadow: 0 10px 30px rgba(0,0,0,.17);
       transition: .25s ease;
+      pointer-events: auto;
     }
-
-    .float:hover {
-      transform: scale(1.15);
-      background: rgba(255,115,175,.16);
-    }
-
+    .float:hover { transform: scale(1.15); background: rgba(255,115,175,.16); }
     .f1 { left: 7%; top: 18%; }
     .f2 { right: 8%; top: 24%; animation-delay: 1s; }
     .f3 { left: 10%; bottom: 18%; animation-delay: 1.8s; }
     .f4 { right: 10%; bottom: 15%; animation-delay: 2.5s; }
-
     @keyframes floating {
-      0%,100% {
-        transform: translateY(0) rotate(-3deg);
-      }
-      50% {
-        transform: translateY(-14px) rotate(4deg);
-      }
+      0%,100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-14px) rotate(4deg); }
     }
 
+    /* ---------- 🎞️ PHOTO GALLERY (NEW) ---------- */
+    .photo-gallery-container {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none; /* container lets clicks pass through, photos themselves are decorative */
+      overflow: hidden;
+    }
+
+    .memory-photo {
+      position: absolute;
+      width: var(--photo-size);
+      height: var(--photo-size);
+      border-radius: 18px;
+      background-size: cover;
+      background-position: center;
+      border: 2px solid rgba(255,255,255,0.8);
+      box-shadow: 0 18px 30px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: scale(0.75) rotate(0deg);
+      animation: photoAppear 1.1s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+      pointer-events: none;
+    }
+
+    /* Dissolve / ease-in effect with random rotation */
+    @keyframes photoAppear {
+      0% { opacity: 0; transform: scale(0.65) rotate(-8deg); filter: blur(2px); }
+      30% { opacity: 0.4; filter: blur(1px); }
+      100% { opacity: 0.95; transform: scale(1) rotate(var(--rot, 0deg)); filter: blur(0); }
+    }
+
+    /* slight floating animation after appearing */
+    @keyframes floatSoft {
+      0%,100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+      50% { transform: translateY(-10px) rotate(calc(var(--rot, 0deg) + 3deg)); }
+    }
+
+    .memory-photo::after {
+      content: "📷";
+      position: absolute;
+      bottom: -12px;
+      right: -8px;
+      font-size: 18px;
+      background: rgba(255,255,255,0.85);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    /* mobile adjustments */
     @media (max-width: 650px) {
-      .gift-area {
-        transform: scale(.82);
-        margin-top: -5px;
-      }
-
-      .countdown {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .float {
-        width: 44px;
-        height: 44px;
-        font-size: 18px;
-      }
-
+      .gift-area { transform: scale(.82); margin-top: -5px; }
+      .countdown { grid-template-columns: repeat(2, 1fr); }
+      .float { width: 44px; height: 44px; font-size: 18px; }
       .f1 { left: 3%; top: 12%; }
       .f2 { right: 3%; top: 15%; }
       .f3 { left: 3%; bottom: 10%; }
       .f4 { right: 3%; bottom: 10%; }
+      :root { --photo-size: clamp(70px, 16vw, 130px); }
     }
   </style>
 </head>
-
 <body>
 
   <div class="stars" id="stars"></div>
+
+  <!-- Photo gallery layer (photos will appear randomly, dissolve effect, rotating) -->
+  <div class="photo-gallery-container" id="photoGallery"></div>
 
   <button class="float f1">💗</button>
   <button class="float f2">✨</button>
@@ -507,23 +289,16 @@
   <button class="float f4">🦋</button>
 
   <main class="page">
-
     <!-- LANDING -->
     <section class="landing" id="landing">
-
       <div class="eyebrow">a little surprise</div>
-
       <h1>Something is<br>waiting for you ✨</h1>
-
       <p class="intro">
         There is a very special date coming.<br>
         But first... something has to be opened.
       </p>
-
       <div class="gift-area" id="giftArea">
-
         <div class="gift-shadow"></div>
-
         <div class="gift-particles">
           <span class="particle">✨</span>
           <span class="particle">💗</span>
@@ -532,222 +307,178 @@
           <span class="particle">💕</span>
           <span class="particle">🦋</span>
         </div>
-
-        <div class="bow">
-          <div class="bow-left"></div>
-          <div class="bow-right"></div>
-          <div class="bow-center"></div>
-        </div>
-
-        <div class="gift-lid">
-          <div class="lid-ribbon"></div>
-        </div>
-
-        <div class="gift-box">
-          <div class="gift-front"></div>
-          <div class="gift-ribbon-horizontal"></div>
-        </div>
-
+        <div class="bow"><div class="bow-left"></div><div class="bow-right"></div><div class="bow-center"></div></div>
+        <div class="gift-lid"><div class="lid-ribbon"></div></div>
+        <div class="gift-box"><div class="gift-front"></div><div class="gift-ribbon-horizontal"></div></div>
       </div>
-
-      <div class="click-text">
-        Click the gift 🎀
-      </div>
-
+      <div class="click-text">Click the gift 🎀</div>
     </section>
 
     <!-- COUNTDOWN -->
     <section class="countdown-page" id="countdownPage">
-
       <div class="eyebrow">the countdown has begun</div>
-
       <h1>Her Day is Coming 💗</h1>
-
-      <p class="subtitle">
-        Some dates are just dates.<br>
-        And then there is <strong>27 August</strong>.
-      </p>
-
+      <p class="subtitle">Some dates are just dates.<br>And then there is <strong>27 August</strong>.</p>
       <div class="countdown">
-
-        <div class="box">
-          <span class="num" id="days">00</span>
-          <span class="label">Days</span>
-        </div>
-
-        <div class="box">
-          <span class="num" id="hours">00</span>
-          <span class="label">Hours</span>
-        </div>
-
-        <div class="box">
-          <span class="num" id="minutes">00</span>
-          <span class="label">Minutes</span>
-        </div>
-
-        <div class="box">
-          <span class="num" id="seconds">00</span>
-          <span class="label">Seconds</span>
-        </div>
-
+        <div class="box"><span class="num" id="days">00</span><span class="label">Days</span></div>
+        <div class="box"><span class="num" id="hours">00</span><span class="label">Hours</span></div>
+        <div class="box"><span class="num" id="minutes">00</span><span class="label">Minutes</span></div>
+        <div class="box"><span class="num" id="seconds">00</span><span class="label">Seconds</span></div>
       </div>
-
-      <div class="date">
-        🎂 27 August 2026
-      </div>
-
+      <div class="date">🎂 27 August 2026</div>
     </section>
-
   </main>
 
   <script>
-
-    /* ---------- STARS ---------- */
-
-    const stars = document.getElementById("stars");
-
-    for (let i = 0; i < 100; i++) {
-      const star = document.createElement("span");
-
-      star.className = "star";
-
-      star.style.left = Math.random() * 100 + "%";
-      star.style.top = Math.random() * 100 + "%";
-      star.style.animationDelay = Math.random() * 3 + "s";
-
-      stars.appendChild(star);
-    }
-
-    /* ---------- GIFT ---------- */
-
-    const giftArea = document.getElementById("giftArea");
-    const landing = document.getElementById("landing");
-    const countdownPage = document.getElementById("countdownPage");
-
-    let opened = false;
-
-    giftArea.addEventListener("click", () => {
-
-      if (opened) return;
-
-      opened = true;
-
-      giftArea.classList.add("open");
-
-      setTimeout(() => {
-        landing.classList.add("hide");
-        countdownPage.classList.add("show");
-      }, 1100);
-
-    });
-
-    /* ---------- COUNTDOWN ---------- */
-
-    const target = new Date("2026-08-27T00:00:00");
-
-    function updateCountdown() {
-
-      const now = new Date();
-      const diff = target - now;
-
-      if (diff <= 0) {
-
-        document.getElementById("days").textContent = "00";
-        document.getElementById("hours").textContent = "00";
-        document.getElementById("minutes").textContent = "00";
-        document.getElementById("seconds").textContent = "00";
-
-        document.querySelector(".countdown-page h1").textContent =
-          "Happy Birthday 💗";
-
-        return;
+    (function() {
+      // ---------- STARS (existing) ----------
+      const starsContainer = document.getElementById("stars");
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement("span");
+        star.className = "star";
+        star.style.left = Math.random() * 100 + "%";
+        star.style.top = Math.random() * 100 + "%";
+        star.style.animationDelay = Math.random() * 3 + "s";
+        starsContainer.appendChild(star);
       }
 
-      const days = Math.floor(diff / 86400000);
+      // ---------- GIFT & COUNTDOWN (existing) ----------
+      const giftArea = document.getElementById("giftArea");
+      const landing = document.getElementById("landing");
+      const countdownPage = document.getElementById("countdownPage");
+      let opened = false;
 
-      const hours =
-        Math.floor((diff / 3600000) % 24);
-
-      const minutes =
-        Math.floor((diff / 60000) % 60);
-
-      const seconds =
-        Math.floor((diff / 1000) % 60);
-
-      document.getElementById("days").textContent =
-        String(days).padStart(2,"0");
-
-      document.getElementById("hours").textContent =
-        String(hours).padStart(2,"0");
-
-      document.getElementById("minutes").textContent =
-        String(minutes).padStart(2,"0");
-
-      document.getElementById("seconds").textContent =
-        String(seconds).padStart(2,"0");
-    }
-
-    updateCountdown();
-
-    setInterval(updateCountdown,1000);
-
-    /* ---------- FLOATING BUTTONS ---------- */
-
-    document.querySelectorAll(".float").forEach(button => {
-
-      button.addEventListener("click", e => {
-
-        const emojis = ["💗","✨","💕","🌸","🦋"];
-
-        for(let i=0;i<8;i++){
-
-          const particle = document.createElement("div");
-
-          particle.textContent =
-            emojis[Math.floor(Math.random()*emojis.length)];
-
-          particle.style.position = "fixed";
-          particle.style.left = e.clientX + "px";
-          particle.style.top = e.clientY + "px";
-          particle.style.pointerEvents = "none";
-          particle.style.fontSize = "20px";
-          particle.style.zIndex = "50";
-
-          document.body.appendChild(particle);
-
-          const x =
-            (Math.random() - .5) * 180;
-
-          const y =
-            -80 - Math.random() * 120;
-
-          particle.animate(
-            [
-              {
-                transform: "translate(-50%,-50%) scale(.5)",
-                opacity: 1
-              },
-              {
-                transform:
-                  `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1.2)`,
-                opacity: 0
-              }
-            ],
-            {
-              duration: 1000,
-              easing: "cubic-bezier(.2,.8,.2,1)"
-            }
-          );
-
-          setTimeout(() => particle.remove(),1000);
-        }
-
+      giftArea.addEventListener("click", () => {
+        if (opened) return;
+        opened = true;
+        giftArea.classList.add("open");
+        setTimeout(() => {
+          landing.classList.add("hide");
+          countdownPage.classList.add("show");
+          // After opening, also start showing more photos gradually? (already running from load)
+        }, 1100);
       });
 
-    });
+      const target = new Date("2026-08-27T00:00:00");
+      function updateCountdown() {
+        const now = new Date();
+        const diff = target - now;
+        if (diff <= 0) {
+          document.getElementById("days").textContent = "00";
+          document.getElementById("hours").textContent = "00";
+          document.getElementById("minutes").textContent = "00";
+          document.getElementById("seconds").textContent = "00";
+          document.querySelector(".countdown-page h1").textContent = "Happy Birthday 💗";
+          return;
+        }
+        const days = Math.floor(diff / 86400000);
+        const hours = Math.floor((diff / 3600000) % 24);
+        const minutes = Math.floor((diff / 60000) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+        document.getElementById("days").textContent = String(days).padStart(2,"0");
+        document.getElementById("hours").textContent = String(hours).padStart(2,"0");
+        document.getElementById("minutes").textContent = String(minutes).padStart(2,"0");
+        document.getElementById("seconds").textContent = String(seconds).padStart(2,"0");
+      }
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
 
+      // ---------- FLOATING BUTTONS (existing) ----------
+      document.querySelectorAll(".float").forEach(button => {
+        button.addEventListener("click", e => {
+          const emojis = ["💗","✨","💕","🌸","🦋"];
+          for(let i=0;i<8;i++){
+            const particle = document.createElement("div");
+            particle.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+            particle.style.position = "fixed";
+            particle.style.left = e.clientX + "px";
+            particle.style.top = e.clientY + "px";
+            particle.style.pointerEvents = "none";
+            particle.style.fontSize = "20px";
+            particle.style.zIndex = "50";
+            document.body.appendChild(particle);
+            const x = (Math.random() - .5) * 180;
+            const y = -80 - Math.random() * 120;
+            particle.animate([
+              { transform: "translate(-50%,-50%) scale(.5)", opacity: 1 },
+              { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1.2)`, opacity: 0 }
+            ], { duration: 1000, easing: "cubic-bezier(.2,.8,.2,1)" });
+            setTimeout(() => particle.remove(), 1000);
+          }
+        });
+      });
+
+      // ---------- 📸 NEW: ROTATING PHOTO GALLERY (dissolve effect) ----------
+      // Using unsplash random images as placeholders (56 "photos" concept).
+      // We generate 40+ photos for smooth rotation, each with random position, rotation, size.
+      const photoGallery = document.getElementById("photoGallery");
+      
+      // To simulate many photos, we create 56 unique image elements with dynamic URLs.
+      // Using source.unsplash.com for random images (or picsum) — but we ensure variety.
+      const TOTAL_PHOTOS = 56; 
+      
+      // Build array of photo descriptors with random positions and rotations.
+      const photoData = [];
+      for (let i = 0; i < TOTAL_PHOTOS; i++) {
+        // random position across viewport (with margins)
+        const left = Math.random() * 80 + 10; // 10% to 90%
+        const top = Math.random() * 80 + 10; 
+        const rotation = (Math.random() * 20 - 10).toFixed(1); // -10deg to 10deg
+        const delay = i * 0.15 + Math.random() * 0.4; // staggered dissolve appearance
+        const sizeVariant = Math.random() * 0.4 + 0.8; // 0.8 to 1.2 of base size
+        const imageUrl = `https://picsum.photos/seed/memory${i + 20}/300/300`; // unique seed per photo
+        photoData.push({ left, top, rotation, delay, sizeVariant, imageUrl });
+      }
+
+      // Function to create photo elements and append them.
+      function createPhotoElement(data, index) {
+        const photo = document.createElement("div");
+        photo.className = "memory-photo";
+        photo.style.left = data.left + "%";
+        photo.style.top = data.top + "%";
+        photo.style.setProperty('--rot', data.rotation + 'deg');
+        photo.style.animationDelay = `${data.delay}s`;
+        photo.style.width = `calc(var(--photo-size) * ${data.sizeVariant})`;
+        photo.style.height = `calc(var(--photo-size) * ${data.sizeVariant})`;
+        photo.style.backgroundImage = `url('${data.imageUrl}')`;
+        photo.style.zIndex = 8; // behind floating buttons but above background
+        photo.title = `Memory ${index + 1}`;
+        return photo;
+      }
+
+      // Append all photos to gallery container.
+      photoData.forEach((data, idx) => {
+        const photoEl = createPhotoElement(data, idx);
+        photoGallery.appendChild(photoEl);
+      });
+
+      // Randomly rotate some photos with additional floating animation after appearing.
+      // Use a second animation for perpetual gentle rotation after the first dissolve ends.
+      const style = document.createElement('style');
+      style.textContent = `
+        .memory-photo {
+          animation: photoAppear 1.2s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards, 
+                     floatSoft 4s ease-in-out infinite;
+          animation-delay: var(--appear-delay, 0s), 1.2s; /* second animation starts after appear */
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Adjust appearance delay variable to custom property for multiple animations.
+      document.querySelectorAll('.memory-photo').forEach((photo, i) => {
+        const delay = photoData[i]?.delay || 0;
+        photo.style.setProperty('--appear-delay', `${delay}s`);
+      });
+
+      // (Optional) Add continuous shuffle of photos? 
+      // For "rotating amount of 56 photos", we keep them all visible with opacity and float.
+      // Also add subtle continuous reposition? Not needed; they stay in place with float.
+      
+      // Ensure photos don't block interaction too much (they are pointer-events none).
+      // Done.
+
+      console.log(`✨ ${TOTAL_PHOTOS} memory photos added with dissolve effect.`);
+    })();
   </script>
-
 </body>
 </html>
-
