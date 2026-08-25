@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Crucial meta tag for mobile scaling -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>For You ✨</title>
 
-  <!-- Elegant Fonts: Cormorant Garamond for headings, Montserrat for numbers and text -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
       --bg-mid: #161e31;
       --gold-light: #f9d4b6;
       --gold-dark: #c89574;
-      --glass-bg: rgba(20, 25, 38, 0.5);
+      --glass-bg: rgba(20, 25, 38, 0.55);
       --glass-border: rgba(249, 212, 182, 0.2);
     }
 
@@ -26,9 +26,12 @@
       box-sizing: border-box;
     }
 
+    /* Fixed position prevents mobile bounce and scrollbars */
     body {
-      min-height: 100vh;
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
+      position: fixed;
       font-family: 'Montserrat', sans-serif;
       background: linear-gradient(135deg, var(--bg-dark), var(--bg-mid));
       color: #fff;
@@ -37,7 +40,6 @@
       align-items: center;
     }
 
-    /* Animated ambient background glow */
     body::before {
       content: '';
       position: absolute;
@@ -53,7 +55,6 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* ---------- TEXT & TYPOGRAPHY ---------- */
     h1, h2 {
       font-family: 'Cormorant Garamond', serif;
       font-weight: 600;
@@ -72,7 +73,7 @@
       to { background-position: 200% center; }
     }
 
-    /* ---------- INTRO SCREEN (THE GATE) ---------- */
+    /* ---------- INTRO SCREEN ---------- */
     #intro-screen {
       position: absolute;
       inset: 0;
@@ -86,9 +87,11 @@
     }
 
     .intro-title {
-      font-size: clamp(32px, 6vw, 54px);
+      font-size: clamp(28px, 6vw, 54px);
       margin-bottom: 40px;
       letter-spacing: 2px;
+      padding: 0 20px;
+      text-align: center;
     }
 
     .unlock-btn {
@@ -106,6 +109,8 @@
       position: relative;
       transition: all 0.4s ease;
       box-shadow: 0 0 20px rgba(200, 149, 116, 0.2), inset 0 0 20px rgba(200, 149, 116, 0.1);
+      /* Prevent tap highlight on mobile */
+      -webkit-tap-highlight-color: transparent; 
     }
 
     .unlock-btn::before {
@@ -117,9 +122,9 @@
       animation: pulseRing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
 
-    .unlock-btn:hover {
-      background: rgba(200, 149, 116, 0.15);
-      transform: scale(1.05);
+    .unlock-btn:active {
+      transform: scale(0.95);
+      background: rgba(200, 149, 116, 0.2);
     }
 
     .unlock-text {
@@ -136,7 +141,7 @@
       100% { transform: scale(1.4); opacity: 0; }
     }
 
-    /* ---------- MAIN CONTENT (COUNTDOWN) ---------- */
+    /* ---------- MAIN CONTENT ---------- */
     #main-screen {
       position: relative;
       z-index: 10;
@@ -144,8 +149,7 @@
       visibility: hidden;
       transform: translateY(30px);
       transition: all 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-      transition-delay: 0.3s;
-      width: min(90vw, 700px);
+      width: min(92vw, 700px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -178,9 +182,9 @@
     }
 
     .card-title {
-      font-size: clamp(40px, 8vw, 65px);
+      font-size: clamp(34px, 8vw, 65px);
       margin-bottom: 40px;
-      line-height: 1.1;
+      line-height: 1.2;
     }
 
     .countdown-wrapper {
@@ -196,7 +200,7 @@
     }
 
     .time-num {
-      font-size: clamp(32px, 6vw, 48px);
+      font-size: clamp(28px, 6vw, 48px);
       font-weight: 300;
       color: #fff;
       font-variant-numeric: tabular-nums;
@@ -212,33 +216,34 @@
 
     .date-badge {
       display: inline-block;
-      margin-top: 40px;
+      margin-top: 35px;
       padding: 10px 24px;
       border: 1px solid var(--glass-border);
       border-radius: 100px;
-      font-size: 14px;
+      font-size: 13px;
       letter-spacing: 1px;
       background: rgba(0,0,0,0.2);
     }
 
-    /* ---------- POLAROID PHOTO GALLERY ---------- */
+    /* ---------- POLAROIDS ---------- */
     #photo-layer {
       position: absolute;
       inset: 0;
-      z-index: 2; /* Behind the glass card (z-index 10) */
+      z-index: 2;
       pointer-events: none;
     }
 
     .polaroid {
       position: absolute;
-      width: clamp(140px, 22vw, 220px);
+      width: 200px;
       background: #fff;
-      padding: 10px 10px 35px 10px; /* Thicker bottom for polaroid look */
+      padding: 10px 10px 35px 10px;
       border-radius: 4px;
       box-shadow: 0 15px 35px rgba(0,0,0,0.5);
       opacity: 0;
       transform: translateY(50px) rotate(0deg);
       animation: polaroidFloat 7s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+      will-change: transform, opacity;
     }
 
     .polaroid-img {
@@ -253,44 +258,58 @@
     @keyframes polaroidFloat {
       0% { 
         opacity: 0; 
-        transform: translateY(50px) scale(0.9) rotate(calc(var(--rot) - 5deg)); 
-        filter: blur(5px);
+        transform: translateY(100px) scale(0.9) rotate(calc(var(--rot) - 10deg)); 
       }
       20% { 
-        opacity: 0.6; /* Soft opacity so it doesn't distract too much */
-        filter: blur(0px);
+        opacity: 0.55; 
       }
       80% {
-        opacity: 0.6;
+        opacity: 0.55;
       }
       100% { 
         opacity: 0; 
-        transform: translateY(-80px) scale(1.05) rotate(var(--rot)); 
-        filter: blur(8px);
+        transform: translateY(-120px) scale(1.05) rotate(var(--rot)); 
       }
     }
 
-    /* Mobile Tweaks */
+    /* ---------- MOBILE SPECIFIC CSS ---------- */
     @media (max-width: 600px) {
-      .glass-card { padding: 40px 20px; }
-      .countdown-wrapper { gap: 8px; }
-      .polaroid { padding: 6px 6px 24px 6px; }
+      .glass-card {
+        padding: 35px 15px;
+        border-radius: 20px;
+      }
+      
+      .card-title {
+        margin-bottom: 30px;
+      }
+
+      /* Stack countdown into a 2x2 grid for mobile readability */
+      .countdown-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px 10px; 
+      }
+      
+      .time-num {
+        font-size: 38px; /* Force larger, readable numbers on mobile */
+      }
+
+      .polaroid {
+        width: 120px; /* Smaller polaroids so they fit mobile screens */
+        padding: 6px 6px 24px 6px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Photo Layer (Background) -->
   <div id="photo-layer"></div>
 
-  <!-- Intro Screen / Unlock Gate -->
   <div id="intro-screen">
     <h1 class="intro-title gold-text">A Moment in Time</h1>
     <button class="unlock-btn" id="unlockBtn">✦</button>
     <p class="unlock-text">Tap to Unlock</p>
   </div>
 
-  <!-- Main Countdown Screen -->
   <div id="main-screen">
     <div class="glass-card">
       <div class="card-subtitle">Counting down to</div>
@@ -307,11 +326,11 @@
         </div>
         <div class="time-box">
           <span class="time-num" id="minutes">00</span>
-          <span class="time-label">Minutes</span>
+          <span class="time-label">Mins</span>
         </div>
         <div class="time-box">
           <span class="time-num" id="seconds">00</span>
-          <span class="time-label">Seconds</span>
+          <span class="time-label">Secs</span>
         </div>
       </div>
       
@@ -320,8 +339,6 @@
   </div>
 
   <script>
-    // --- 1. CONFIGURATION ---
-    // Make sure these filenames exactly match the files in your folder!
     const photos = [
       "pic1.jpeg",
       "pic2.jpeg",
@@ -329,12 +346,10 @@
       "pic4.jpeg",
       "pic5.jpeg",
       "pic6.jpeg" 
-      // Keep adding "pic7.jpeg", etc., separated by commas if you have more
     ];
 
     const targetDate = new Date("2026-08-27T00:00:00");
 
-    // --- 2. UNLOCK LOGIC ---
     const introScreen = document.getElementById("intro-screen");
     const mainScreen = document.getElementById("main-screen");
     const unlockBtn = document.getElementById("unlockBtn");
@@ -345,11 +360,9 @@
       if(isUnlocked) return;
       isUnlocked = true;
       
-      // Fade out intro
       introScreen.style.opacity = "0";
       introScreen.style.pointerEvents = "none";
       
-      // Reveal main screen and start photos
       setTimeout(() => {
         introScreen.style.visibility = "hidden";
         mainScreen.classList.add("active");
@@ -357,7 +370,6 @@
       }, 800);
     });
 
-    // --- 3. COUNTDOWN LOGIC ---
     function updateCountdown() {
       const now = new Date();
       const diff = targetDate - now;
@@ -383,42 +395,42 @@
       document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
     }
 
-    // Run immediately, then every second
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
-    // --- 4. POLAROID PHOTO GALLERY LOGIC ---
     const photoLayer = document.getElementById("photo-layer");
     let photoIndex = 0;
 
     function spawnPhoto() {
       if(photos.length === 0) return;
+      if(photoIndex >= photos.length) photoIndex = 0;
 
-      // Loop back to start if we run out of photos
-      if(photoIndex >= photos.length) {
-        photoIndex = 0;
-      }
-
-      // Create polaroid container
       const polaroid = document.createElement("div");
       polaroid.className = "polaroid";
       
-      // Create inner image div
       const imgDiv = document.createElement("div");
       imgDiv.className = "polaroid-img";
-      // Reference local file directly
       imgDiv.style.backgroundImage = `url('${photos[photoIndex]}')`;
-      
       polaroid.appendChild(imgDiv);
 
-      // Randomize positioning (keeping them mostly towards the sides so center is clear)
-      const isLeftSide = Math.random() > 0.5;
-      const leftPos = isLeftSide 
-        ? Math.random() * 20 + 5   // 5% to 25% from left
-        : Math.random() * 20 + 75; // 75% to 95% from left
+      // Smart positioning based on screen size
+      const isMobile = window.innerWidth <= 600;
+      let leftPos;
+
+      if (isMobile) {
+        // On mobile, float them randomly across the background (5% to 65% left edge so they fit)
+        leftPos = Math.random() * 60 + 5; 
+      } else {
+        // On desktop, keep them nicely on the far left or far right edges
+        const isLeftSide = Math.random() > 0.5;
+        leftPos = isLeftSide 
+          ? Math.random() * 15 + 5   // 5-20%
+          : Math.random() * 15 + 75; // 75-90%
+      }
       
-      const topPos = Math.random() * 40 + 20; // 20% to 60% from top
-      const rotation = (Math.random() * 30 - 15).toFixed(1); // -15deg to 15deg
+      // Randomize vertical start point and rotation
+      const topPos = Math.random() * 40 + 20; 
+      const rotation = (Math.random() * 30 - 15).toFixed(1);
 
       polaroid.style.left = `${leftPos}%`;
       polaroid.style.top = `${topPos}%`;
@@ -426,21 +438,15 @@
 
       photoLayer.appendChild(polaroid);
 
-      // Cleanup DOM element after animation completes (7 seconds)
       setTimeout(() => {
-        if(polaroid.parentNode) {
-          polaroid.remove();
-        }
+        if(polaroid.parentNode) polaroid.remove();
       }, 7000);
 
       photoIndex++;
     }
 
     function startPhotoGallery() {
-      // Spawn first photo quickly
       setTimeout(spawnPhoto, 500);
-      
-      // Spawn a new photo every 3.5 seconds (max 2 on screen at a time based on 7s lifespan)
       setInterval(spawnPhoto, 3500);
     }
   </script>
