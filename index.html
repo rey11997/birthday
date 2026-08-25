@@ -15,8 +15,8 @@
       --bg-mid: #161e31;
       --gold-light: #f9d4b6;
       --gold-dark: #c89574;
-      --glass-bg: rgba(20, 25, 38, 0.55);
-      --glass-border: rgba(249, 212, 182, 0.2);
+      --glass-bg: rgba(20, 25, 38, 0.65);
+      --glass-border: rgba(249, 212, 182, 0.25);
     }
 
     * {
@@ -102,7 +102,7 @@
       align-items: center;
       position: relative;
       transition: all 0.4s ease;
-      box-shadow: 0 0 20px rgba(200, 149, 116, 0.2), inset 0 0 20px rgba(200, 149, 116, 0.1);
+      box-shadow: 0 0 20px rgba(200, 149, 116, 0.2);
       -webkit-tap-highlight-color: transparent; 
     }
 
@@ -117,29 +117,300 @@
 
     .unlock-btn:active {
       transform: scale(0.95);
-      background: rgba(20The reason your photo is currently invisible is likely because the timer box has a solid background color that is completely covering the image, even if the layering (`z-index`) is correct. 
+      background: rgba(200, 149, 116, 0.2);
+    }
 
-To fix this, you need to use a semi-transparent background (like `rgba`) on the timer box so the photo shows through, and use CSS Flexbox or Grid to split the screen into a 1:2 ratio.
+    .unlock-text {
+      margin-top: 25px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.6);
+    }
 
-Here is how to structure the HTML and CSS to achieve both:
+    @keyframes pulseRing {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
 
-### The HTML Structure
+    /* ---------- 1:2 SPLIT MAIN SCREEN ---------- */
+    #main-screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 1.5s ease, visibility 1.5s ease;
+      z-index: 5;
+    }
 
-```html
-<div class="screen-container">
-  <!-- Left side (1 part) -->
-  <div class="left-panel">
-    <h2>Menu / Controls</h2>
+    #main-screen.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* TOP PANEL: 1 Part (Timer) */
+    .timer-panel {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+      z-index: 10;
+    }
+
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 20px 30px;
+      width: min(92vw, 600px);
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-subtitle {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 5px;
+    }
+
+    .card-title {
+      font-size: clamp(24px, 5vw, 42px);
+      margin-bottom: 15px;
+      line-height: 1.1;
+    }
+
+    .countdown-wrapper {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .time-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .time-num {
+      font-size: clamp(22px, 5vw, 36px);
+      font-weight: 300;
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .time-label {
+      margin-top: 4px;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gold-dark);
+    }
+
+    /* BOTTOM PANEL: 2 Parts (Photo Canvas) */
+    .photo-panel {
+      flex: 2;
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    /* ---------- POLAROIDS ---------- */
+    .polaroid {
+      position: absolute;
+      width: 140px;
+      background: #fff;
+      padding: 8px 8px 24px 8px;
+      border-radius: 4px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+      opacity: 0;
+      transform: translateY(100%) rotate(0deg);
+      animation: polaroidRise 8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      will-change: transform, opacity;
+    }
+
+    .polaroid-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background-size: cover;
+      background-position: center;
+      background-color: #eee;
+      border-radius: 2px;
+    }
+
+    @keyframes polaroidRise {
+      0% { 
+        opacity: 0; 
+        transform: translateY(120%) scale(0.8) rotate(calc(var(--rot) - 5deg)); 
+      }
+      15% { 
+        opacity: 1; 
+      }
+      80% {
+        opacity: 1;
+      }
+      100% { 
+        opacity: 0; 
+        transform: translateY(-50%) scale(1.05) rotate(var(--rot)); 
+      }
+    }
+
+    @media (min-width: 601px) {
+      .polaroid {
+        width: 180px;
+        padding: 10px 10px 30px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Intro Screen -->
+  <div id="intro-screen">
+    <h1 class="intro-title gold-text">A Moment in Time</h1>
+    <button class="unlock-btn" id="unlockBtn">✦</button>
+    <p class="unlock-text">Tap to Unlock</p>
   </div>
 
-  <!-- Right side (2 parts) -->
-  <div class="right-panel">
-    <!-- The Photo -->
-    <img src="your-photo.jpg" alt="Background" class="background-photo" />
+  <!-- 1:2 Split Main Screen -->
+  <div id="main-screen">
     
-    <!-- The Timer -->
-    <div class="timer-box">
-      10:00
+    <!-- Top Part (1 Ratio) - Timer Box -->
+    <div class="timer-panel">
+      <div class="glass-card">
+        <div class="card-subtitle">Counting down to</div>
+        <h2 class="card-title gold-text">Her Special Day</h2>
+        
+        <div class="countdown-wrapper">
+          <div class="time-box">
+            <span class="time-num" id="days">00</span>
+            <span class="time-label">Days</span>
+          </div>
+          <div class="time-box">
+            <span class="time-num" id="hours">00</span>
+            <span class="time-label">Hours</span>
+          </div>
+          <div class="time-box">
+            <span class="time-num" id="minutes">00</span>
+            <span class="time-label">Mins</span>
+          </div>
+          <div class="time-box">
+            <span class="time-num" id="seconds">00</span>
+            <span class="time-label">Secs</span>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- Bottom Part (2 Ratio) - Photo Floating Canvas -->
+    <div class="photo-panel" id="photoPanel"></div>
+
   </div>
-</div>
+
+  <script>
+    const photos = [
+      "pic1.jpeg",
+      "pic2.jpeg",
+      "pic3.jpeg",
+      "pic4.jpeg",
+      "pic5.jpeg",
+      "pic6.jpeg" 
+    ];
+
+    const targetDate = new Date("2026-08-27T00:00:00");
+
+    const introScreen = document.getElementById("intro-screen");
+    const mainScreen = document.getElementById("main-screen");
+    const unlockBtn = document.getElementById("unlockBtn");
+    const photoPanel = document.getElementById("photoPanel");
+
+    let isUnlocked = false;
+
+    unlockBtn.addEventListener("click", () => {
+      if(isUnlocked) return;
+      isUnlocked = true;
+      
+      introScreen.style.opacity = "0";
+      introScreen.style.pointerEvents = "none";
+      
+      setTimeout(() => {
+        introScreen.style.visibility = "hidden";
+        mainScreen.classList.add("active");
+        startPhotoGallery();
+      }, 800);
+    });
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        document.getElementById("days").textContent = "00";
+        document.getElementById("hours").textContent = "00";
+        document.getElementById("minutes").textContent = "00";
+        document.getElementById("seconds").textContent = "00";
+        document.querySelector(".card-title").textContent = "Happy Birthday ✨";
+        document.querySelector(".card-subtitle").textContent = "The day is here";
+        return;
+      }
+
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff / 3600000) % 24);
+      const minutes = Math.floor((diff / 60000) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("days").textContent = String(days).padStart(2, "0");
+      document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+      document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+      document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    let photoIndex = 0;
+
+    function spawnPhoto() {
+      if(photos.length === 0) return;
+      if(photoIndex >= photos.length) photoIndex = 0;
+
+      const polaroid = document.createElement("div");
+      polaroid.className = "polaroid";
+      
+      const imgDiv = document.createElement("div");
+      imgDiv.className = "polaroid-img";
+      imgDiv.style.backgroundImage = `url('${photos[photoIndex]}')`;
+      polaroid.appendChild(imgDiv);
+
+      // Random position strictly inside the 2-ratio photo panel width
+      const leftPos = Math.random() * 60 + 10; // 10% to 70%
+      const rotation = (Math.random() * 30 - 15).toFixed(1); // -15deg to 15deg
+
+      polaroid.style.left = `${leftPos}%`;
+      polaroid.style.bottom = "0px";
+      polaroid.style.setProperty('--rot', `${rotation}deg`);
+
+      photoPanel.appendChild(polaroid);
+
+      // Clean up DOM after animation completes (8s)
+      setTimeout(() => {
+        if(polaroid.parentNode) polaroid.remove();
+      }, 8000);
+
+      photoIndex++;
+    }
+
+    function startPhotoGallery() {
+      setTimeout(spawnPhoto, 300);
+      setInterval(spawnPhoto, 3500);
+    }
+  </script>
+</body>
+</html>
